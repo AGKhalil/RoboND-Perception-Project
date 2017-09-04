@@ -140,8 +140,6 @@ Now that we have each object represented by a single cluster respectively, we ca
 
 For a deeper insight please refer to [`capture_feature.py`](https://github.com/AGKhalil/RoboND-Perception-Project/blob/master/sensor_stick/scripts/capture_features.py) and to [`features.py`](https://github.com/AGKhalil/RoboND-Perception-Project/blob/master/sensor_stick/src/sensor_stick/features.py).
 
-![demo-1](https://user-images.githubusercontent.com/20687560/28748231-46b5b912-7467-11e7-8778-3095172b7b19.png)
-
 ### Pick and Place Setup
 
 #### 1. For all three tabletop setups (`test*.world`), perform object recognition, then read in respective pick list (`pick_list_*.yaml`). Next construct the messages that would comprise a valid `PickPlace` request output them to `.yaml` format.
