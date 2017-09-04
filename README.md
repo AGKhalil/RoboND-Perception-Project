@@ -43,8 +43,9 @@ As shown in the code block above the voxel dimension used, `LEAF_SIZE` is chosen
 #### Passthrough Filter
 The next filter applied is a pass through filter. This filter basically crops the pcl in 3d space. You can choose in which axis to crop and then from where to where along the axis. The point of doing this is to eliminate unncessary data from being processed further on. For instance, the image below shows what the robot initially sees. It is clear that the robot needs only consider the table itself and the objects above it. It has no need to look at the table's leg, which could result in misidentiification problems later on. So the pcl is essentially cropped in the z-axis to result in the second image.
 
-**TableAndObjectsUncropped**
-**TableAndObjectsCropped**
+![TableAndObjectsUncropped](https://github.com/AGKhalil/RoboND-Perception-Project/blob/master/WriteupImages/TableAndObjectsUncropped.png)
+
+![TableAndObjectsCropped](https://github.com/AGKhalil/RoboND-Perception-Project/blob/master/WriteupImages/TableAndObjectsCropped.png)
 
 The code block below shows the filter in action as well as the cropping value chosen for the project. In the project, the robot kept seeing objects on the left and right. It would then go on to cluster those points. To avoid that from occurring, an additional passthrough filter was added, in the y-direction.
 
@@ -81,7 +82,7 @@ extracted_objects = cloud_filtered.extract(inliers, negative=True)
 #### Outlier Removal Filter
 All this filtering is great, but it does nothing to eliminate noise from the pcl. That's where this filter comes into play. This filter is pretty simple, it takes a point in the pcl and it looks at a certain number of points surrounding it. Any point that is a certain distance away is considered an outlier. This filter really cleans up the data for further analysis. The image below shows a simple example of how this filter works.
 
-**OutlierRemovalFilter**
+![OutlierRemovalFilter](https://github.com/AGKhalil/RoboND-Perception-Project/blob/master/WriteupImages/OutlierRemovalFilter.png)
 
 In the project the following outlier removal filter was applied. The filter is set to check 100 neighbouring points to each point under inspection. Any point a mean distance away larger than the mean distance + x * standard deviation is an outlier. x was chosen as 0.5, which results in a very could filter.
 
@@ -148,13 +149,6 @@ For a deeper insight please refer to `capture_feature.py` **LINK** and to `featu
 Here all the filtering, clustering, and object recognition learned in excersices 1-3 are applied. Three test worlds are given and the robot is supposed to recognize the objects before it so it can decide where to place them. 
 
 The main difference between this script and the excerises 1-3 scripts is that it also outputs the results in a `.yaml` file.
-
-Below is an image showing the robot recognizing objects in `test2.world`!
-
-**Test2WorldObjectRecognition**
-
-And here's another image! 
-![demo-2](https://user-images.githubusercontent.com/20687560/28748286-9f65680e-7468-11e7-83dc-f1a32380b89c.png)
 
 This has been a very educational project and I really enjoyed going through it. I did learn that machine learning is a really cool thing, but it needs a lot of training. I do hope to pursue the additional challenge of this project in the future. If I am to keep going with this project however, I would optimize my training technique more to reduce the computing time. Right now It takes about 40mins to train each set and that is long. I am using hsv color recognition and 200 iterations. 
 
