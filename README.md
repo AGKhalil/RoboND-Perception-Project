@@ -26,10 +26,10 @@
 
 ### Exercise 1, 2 and 3 pipeline implemented
 #### 1. Complete Exercise 1 steps. Pipeline for filtering and RANSAC plane fitting implemented.
-In this excersise many filters are applied to the incoming Point cloud (pcl) image. Each filter has a job, which in conjuction, remove noise from the image as well as separate the objects on the table from the table itself. 
+In this exercise many filters are applied to the incoming Point cloud (pcl) image. Each filter has a job, which in conjunction, remove noise from the image as well as separate the objects on the table from the table itself. 
 
 #### Voxel Downsampling Filter
-The first filter applied to the pcl image is a voxel filter. As mentioned in the course lessons, *"RGB-D cameras provide feature rich and particularly dense point clouds, meaning, more points are packed in per unit volume than, for example, a Lidar point cloud. Running computation on a full resolution point cloud can be slow and may not yield any improvement on results obtained using a more sparsely sampled point cloud."* To reduce the point cloud density, and the computing time by extension, a voxel grid downsampling filter is applied. The filter essentially breaks down the point cloud into smaller cubes. Within each cube, the filter takes the spatial average of all the points. The average becomes an output point, the voxel. Now the original pcl image is comprised of multiple voxels, or volumetric points, reducing the amount of points represnting the data. The dimensions of the voxel cube can be increased or decreased accordingly. The smaller the voxel is, the more accurate is the representation of the image, but the longer is the computation time. So it's a trade off of sorts. Ideally, you want to choose the voxel dimensions so that the image is well represented without much loss in the data, while maintaining a relatively short computing time. 
+The first filter applied to the pcl image is a voxel filter. As mentioned in the course lessons, *"RGB-D cameras provide feature rich and particularly dense point clouds, meaning, more points are packed in per unit volume than, for example, a Lidar point cloud. Running computation on a full resolution point cloud can be slow and may not yield any improvement on results obtained using a more sparsely sampled point cloud."* To reduce the point cloud density, and the computing time by extension, a voxel grid downsampling filter is applied. The filter essentially breaks down the point cloud into smaller cubes. Within each cube, the filter takes the spatial average of all the points. The average becomes an output point, the voxel. Now the original pcl image is comprised of multiple voxels, or volumetric points, reducing the amount of points representing the data. The dimensions of the voxel cube can be increased or decreased accordingly. The smaller the voxel is, the more accurate is the representation of the image, but the longer is the computation time. So it's a trade off of sorts. Ideally, you want to choose the voxel dimensions so that the image is well represented without much loss in the data, while maintaining a relatively short computing time. 
 
 ```py
 vox = cloud.make_voxel_grid_filter()
@@ -41,7 +41,7 @@ cloud_filtered = vox.filter()
 As shown in the code block above the voxel dimension used, `LEAF_SIZE` is chosen to be 0.005m. This value has resulted in a decent output under a very reasonable computing time.
 
 #### Passthrough Filter
-The next filter applied is a pass through filter. This filter basically crops the pcl in 3d space. You can choose in which axis to crop and then from where to where along the axis. The point of doing this is to eliminate unncessary data from being processed further on. For instance, the image below shows what the robot initially sees. It is clear that the robot needs only consider the table itself and the objects above it. It has no need to look at the table's leg, which could result in misidentiification problems later on. So the pcl is essentially cropped in the z-axis to result in the second image.
+The next filter applied is a pass through filter. This filter basically crops the pcl in 3d space. You can choose in which axis to crop and then from where to where along the axis. The point of doing this is to eliminate unnecessary data from being processed further on. For instance, the image below shows what the robot initially sees. It is clear that the robot needs only consider the table itself and the objects above it. It has no need to look at the table's leg, which could result in misidentification problems later on. So the pcl is essentially cropped in the z-axis to result in the second image.
 
 ![TableAndObjectsUncropped](https://github.com/AGKhalil/RoboND-Perception-Project/blob/master/WriteupImages/TableAndObjectsUncropped.png)
 
@@ -65,9 +65,9 @@ passthrough_y.set_filter_limits(axis_min_y, axis_max_y)
 cloud_filtered = passthrough_y.filter()
 ```
 #### RANSAC Filter
-A Random Sample Consensus, or RANSAC, filter is great at identifying the points in a set of data that belong to a certain geometric shape. It identifies the inliers and outliers of the shape in question. The robot does not need to look at the table to recognize the objects, in fact, it may make it harder for the clustring process. Therefore, the table is removed using a RANSAC filter. We know that the table must fit in a plane shape, so the RANSAC filter is applied to the pcl with that in mind. All the points comprising the table plane are inliers and any other point is an outlier; thus, effectively separating both entities from one another. Now that we know what points make up the table, we can just remove them.
+A Random Sample Consensus, or RANSAC, filter is great at identifying the points in a set of data that belong to a certain geometric shape. It identifies the inliers and outliers of the shape in question. The robot does not need to look at the table to recognize the objects, in fact, it may make it harder for the clustering process. Therefore, the table is removed using a RANSAC filter. We know that the table must fit in a plane shape, so the RANSAC filter is applied to the pcl with that in mind. All the points comprising the table plane are inliers and any other point is an outlier; thus, effectively separating both entities from one another. Now that we know what points make up the table, we can just remove them.
 
-The code block below shows the RANSAC filter applied to the project. It is clear that the maximum distance between each point in the plane cirteria was set to 0.04m. This value was effective in identifying the table points. Then the table points are extracted from the pcl.
+The code block below shows the RANSAC filter applied to the project. It is clear that the maximum distance between each point in the plane criteria was set to 0.04m. This value was effective in identifying the table points. Then the table points are extracted from the pcl.
 
 ```py
 seg = cloud_filtered.make_segmenter()
@@ -84,7 +84,7 @@ All this filtering is great, but it does nothing to eliminate noise from the pcl
 
 ![OutlierRemovalFilter](https://github.com/AGKhalil/RoboND-Perception-Project/blob/master/WriteupImages/OutlierRemovalFilter.png)
 
-In the project the following outlier removal filter was applied. The filter is set to check 100 neighbouring points to each point under inspection. Any point a mean distance away larger than the mean distance + x * standard deviation is an outlier. x was chosen as 0.5, which results in a very could filter.
+In the project the following outlier removal filter was applied. The filter is set to check 100 neighboring points to each point under inspection. Any point a mean distance away larger than the mean distance + x * standard deviation is an outlier. x was chosen as 0.5, which results in a very could filter.
 
 ```py
 outlier_filter = cloud.make_statistical_outlier_filter()
@@ -96,9 +96,9 @@ cloud = outlier_filter.filter()
 
 #### 2. Complete Exercise 2 steps: Pipeline including clustering for segmentation implemented.  
 
-After all the filters from excerise 1 are applied, we are left with a pcl comprised of a set of objects. Yet, the robot does ot yet know how many objects are out there, or which points belong to a single object. Therefore, a Density-Based SpatialClustring of Applications with Noise algorithm, DBSCAN, is used. This algorithm looks at a set of data and calculates the Euclidean distance between a point and its neighbours. If that distance is below a certain specified value, the point and its neighbour belong in the same cluster. Furthermore, the minimum and maximum sizes of the cluster are specified.
+After all the filters from exercise 1 are applied, we are left with a pcl comprised of a set of objects. Yet, the robot does not yet know how many objects are out there, or which points belong to a single object. Therefore, a Density-Based Spatial Clustering of Applications with Noise algorithm, DBSCAN, is used. This algorithm looks at a set of data and calculates the Euclidean distance between a point and its neighbors. If that distance is below a certain specified value, the point and its neighbor belong in the same cluster. Furthermore, the minimum and maximum sizes of the cluster are specified.
 
-In the project a clustering distance of 0.01m was used. It is a small value ensuring that no points from neighbouring objects would be contained in the same cluster. Moreover, the minimum and maximum sizes of the cluster are chosen as 10 and 2500. I don't really think these two valuse are of any significant importance. Since the pcl is filtered from any noise, there are no random 5 points near each other that can be mistaken for a cluster. So as long as the minimum number is below that of the smallest object, there is no problem. Same thing for the max number, as long as it is larger than the largest object, there is no problem.
+In the project a clustering distance of 0.01m was used. It is a small value ensuring that no points from neighboring objects would be contained in the same cluster. Moreover, the minimum and maximum sizes of the cluster are chosen as 10 and 2500. I don't really think these two values are of any significant importance. Since the pcl is filtered from any noise, there are no random 5 points near each other that can be mistaken for a cluster. So as long as the minimum number is below that of the smallest object, there is no problem. Same thing for the max number, as long as it is larger than the largest object, there is no problem.
 
 After the clustering, each cluster is corresponded to a random color to aid in the visual representation.
 
@@ -138,7 +138,7 @@ Now that we have each object represented by a single cluster respectively, we ca
 - The histograms are normalized to make sure that all features are compared on the same scale
 - Now if the algorithm is faced with a random object, it will compare what it sees against its training data and classify the object accordingly
 
-For a deeper insight please refer to `capture_feature.py` **LINK** and to `features.py` **LINK**.
+For a deeper insight please refer to [`capture_feature.py`](https://github.com/AGKhalil/RoboND-Perception-Project/blob/master/sensor_stick/scripts/capture_features.py) and to [`features.py`](https://github.com/AGKhalil/RoboND-Perception-Project/blob/master/sensor_stick/src/sensor_stick/features.py).
 
 ![demo-1](https://user-images.githubusercontent.com/20687560/28748231-46b5b912-7467-11e7-8778-3095172b7b19.png)
 
@@ -146,9 +146,9 @@ For a deeper insight please refer to `capture_feature.py` **LINK** and to `featu
 
 #### 1. For all three tabletop setups (`test*.world`), perform object recognition, then read in respective pick list (`pick_list_*.yaml`). Next construct the messages that would comprise a valid `PickPlace` request output them to `.yaml` format.
 
-Here all the filtering, clustering, and object recognition learned in excersices 1-3 are applied. Three test worlds are given and the robot is supposed to recognize the objects before it so it can decide where to place them. 
+Here all the filtering, clustering, and object recognition learned in exercises 1-3 are applied. Three test worlds are given and the robot is supposed to recognize the objects before it so it can decide where to place them. 
 
-The main difference between this script and the excerises 1-3 scripts is that it also outputs the results in a `.yaml` file.
+The main difference between this script and the excursus 1-3 scripts is that it also outputs the results in a `.yaml` file.
 
 This has been a very educational project and I really enjoyed going through it. I did learn that machine learning is a really cool thing, but it needs a lot of training. I do hope to pursue the additional challenge of this project in the future. If I am to keep going with this project however, I would optimize my training technique more to reduce the computing time. Right now It takes about 40mins to train each set and that is long. I am using hsv color recognition and 200 iterations. 
 
