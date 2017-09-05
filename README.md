@@ -140,6 +140,10 @@ Now that we have each object represented by a single cluster respectively, we ca
 
 For a deeper insight please refer to [`capture_feature.py`](https://github.com/AGKhalil/RoboND-Perception-Project/blob/master/sensor_stick/scripts/capture_features.py) and to [`features.py`](https://github.com/AGKhalil/RoboND-Perception-Project/blob/master/sensor_stick/src/sensor_stick/features.py).
 
+The screenshot below shows the confusion matrix for one of the worlds, `test1.world.`. As shown, there are two matrices, the first, Figure 1, shows how many times each item has been labeled correctly as predicted. The second, Figure 2, shows the same data but normalized. For instance, Figure 1 shows that biscuits have been recognized 196 times out of 200 attempts, and Figure 2 shows what that is as a proportion, 0.98. The higher is the success percentage, the darker will the matrix elements be. So we want a very nice and linear relationship between the predicted and actual labels. These two figures show a very high success rate. So the chances that the algorithm will succeed in simulation is good.
+
+![ConfusionMatrices](https://github.com/AGKhalil/RoboND-Perception-Project/blob/master/WriteupImages/ConfusionMatrices.png)
+
 ### Pick and Place Setup
 
 #### 1. For all three tabletop setups (`test*.world`), perform object recognition, then read in respective pick list (`pick_list_*.yaml`). Next construct the messages that would comprise a valid `PickPlace` request output them to `.yaml` format.
