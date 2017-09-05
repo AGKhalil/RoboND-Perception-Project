@@ -43,9 +43,9 @@ As shown in the code block above the voxel dimension used, `LEAF_SIZE` is chosen
 #### Passthrough Filter
 The next filter applied is a pass through filter. This filter basically crops the pcl in 3d space. You can choose in which axis to crop and then from where to where along the axis. The point of doing this is to eliminate unnecessary data from being processed further on. For instance, the image below shows what the robot initially sees. It is clear that the robot needs only consider the table itself and the objects above it. It has no need to look at the table's leg, which could result in misidentification problems later on. So the pcl is essentially cropped in the z-axis to result in the second image.
 
-![TableAndObjectsUncropped](./WriteupImages/TableAndObjectsUncropped)
+![TableAndObjectsUncropped](./WriteupImages/TableAndObjectsUncropped.png)
 
-![TableAndObjectsCropped](https://github.com/AGKhalil/RoboND-Perception-Project/blob/master/WriteupImages/TableAndObjectsCropped.png)
+![TableAndObjectsCropped](./WriteupImages/TableAndObjectsCropped.png)
 
 The code block below shows the filter in action as well as the cropping value chosen for the project. In the project, the robot kept seeing objects on the left and right. It would then go on to cluster those points. To avoid that from occurring, an additional passthrough filter was added, in the y-direction.
 
@@ -82,7 +82,7 @@ extracted_objects = cloud_filtered.extract(inliers, negative=True)
 #### Outlier Removal Filter
 All this filtering is great, but it does nothing to eliminate noise from the pcl. That's where this filter comes into play. This filter is pretty simple, it takes a point in the pcl and it looks at a certain number of points surrounding it. Any point that is a certain distance away is considered an outlier. This filter really cleans up the data for further analysis. The image below shows a simple example of how this filter works.
 
-![OutlierRemovalFilter](https://github.com/AGKhalil/RoboND-Perception-Project/blob/master/WriteupImages/OutlierRemovalFilter.png)
+![OutlierRemovalFilter](./WriteupImages/OutlierRemovalFilter.png)
 
 In the project the following outlier removal filter was applied. The filter is set to check 100 neighboring points to each point under inspection. Any point a mean distance away larger than the mean distance + x * standard deviation is an outlier. x was chosen as 0.5, which results in a very could filter.
 
@@ -138,11 +138,11 @@ Now that we have each object represented by a single cluster respectively, we ca
 - The histograms are normalized to make sure that all features are compared on the same scale
 - Now if the algorithm is faced with a random object, it will compare what it sees against its training data and classify the object accordingly
 
-For a deeper insight please refer to [`capture_feature.py`](https://github.com/AGKhalil/RoboND-Perception-Project/blob/master/sensor_stick/scripts/capture_features.py) and to [`features.py`](https://github.com/AGKhalil/RoboND-Perception-Project/blob/master/sensor_stick/src/sensor_stick/features.py).
+For a deeper insight please refer to [`capture_features.py`](./sensor_stick/scripts/capture_features.py) and to [`features.py`](./sensor_stick/src/sensor_stick/features.py).
 
 The screenshot below shows the confusion matrix for one of the worlds, `test1.world.`. As shown, there are two matrices, the first, Figure 1, shows how many times each item has been labeled correctly as predicted. The second, Figure 2, shows the same data but normalized. For instance, Figure 1 shows that biscuits have been recognized 196 times out of 200 attempts, and Figure 2 shows what that is as a proportion, 0.98. The higher is the success percentage, the darker will the matrix elements be. So we want a very nice and linear relationship between the predicted and actual labels. These two figures show a very high success rate. So the chances that the algorithm will succeed in simulation is good.
 
-![ConfusionMatrices](https://github.com/AGKhalil/RoboND-Perception-Project/blob/master/WriteupImages/ConfusionMatrices.png)
+![ConfusionMatrices](./WriteupImages/ConfusionMatrices.png)
 
 ### Pick and Place Setup
 
