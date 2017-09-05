@@ -43,7 +43,7 @@ As shown in the code block above the voxel dimension used, `LEAF_SIZE` is chosen
 #### Passthrough Filter
 The next filter applied is a pass through filter. This filter basically crops the pcl in 3d space. You can choose in which axis to crop and then from where to where along the axis. The point of doing this is to eliminate unnecessary data from being processed further on. For instance, the image below shows what the robot initially sees. It is clear that the robot needs only consider the table itself and the objects above it. It has no need to look at the table's leg, which could result in misidentification problems later on. So the pcl is essentially cropped in the z-axis to result in the second image.
 
-![TableAndObjectsUncropped](/WriteupImages/TableAndObjectsUncropped)
+![TableAndObjectsUncropped](./WriteupImages/TableAndObjectsUncropped)
 
 ![TableAndObjectsCropped](https://github.com/AGKhalil/RoboND-Perception-Project/blob/master/WriteupImages/TableAndObjectsCropped.png)
 
